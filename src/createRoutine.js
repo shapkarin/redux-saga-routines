@@ -3,7 +3,7 @@ import routineStages from './routineStages';
 
 const isFunction = value => typeof value === 'function';
 
-export default function createRoutine(typePrefix, payloadCreator, metaCreator) {
+export default function createRoutine(typePrefix, { types = [], payloadCreator, metaCreator } = {}) {
   const getCreatorForType = (type, creator) => {
     if (!creator) {
       return creator;
@@ -20,9 +20,11 @@ export default function createRoutine(typePrefix, payloadCreator, metaCreator) {
     return undefined;
   };
 
+  const stages = [...routineStages, ...types];
+
   const createActionCreator = (type) => createAction(`${typePrefix}/${type}`, getCreatorForType(type, payloadCreator), getCreatorForType(type, metaCreator));
 
-  return routineStages.reduce(
+  return stages.reduce(
     (result, stage) => {
       const actionCreator = createActionCreator(stage);
       return Object.assign(result, {
@@ -30,6 +32,6 @@ export default function createRoutine(typePrefix, payloadCreator, metaCreator) {
         [stage.toUpperCase()]: actionCreator.toString(),
       });
     },
-    createActionCreator(routineStages[0])
+    createActionCreator(stages[0])
   );
 }

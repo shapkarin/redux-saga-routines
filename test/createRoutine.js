@@ -73,7 +73,7 @@ describe('createRoutine', () => {
   });
 
   it('should create new routine with provided payload creator', () => {
-    const routine = createRoutine(PREFIX, (payload) => payload * 2);
+    const routine = createRoutine(PREFIX, { payloadCreator: (payload) => payload * 2 });
 
     const originalPayload = 42;
     const payload = 84;
@@ -130,13 +130,13 @@ describe('createRoutine', () => {
   });
 
   it('should create new routine with provided payload creators for each action type', () => {
-    const routine = createRoutine(PREFIX, {
+    const routine = createRoutine(PREFIX, { payloadCreator: {
       trigger: (payload) => payload * 2,
       request: (payload) => payload * 3,
       success: (payload) => payload * 4,
       failure: (payload) => payload * 5,
       fulfill: (payload) => payload * 6,
-    });
+    }});
 
     const originalPayload = 42;
 
@@ -197,13 +197,13 @@ describe('createRoutine', () => {
     const successMeta = { test: 'successMeta' };
     const failureMeta = { test: 'failureMeta' };
     const fulfillMeta = { test: 'fulfillMeta' };
-    const routine = createRoutine(PREFIX, (payload) => payload, {
+    const routine = createRoutine(PREFIX, { metaCreator: {
       trigger: () => triggerMeta,
       request: () => requestMeta,
       success: () => successMeta,
       failure: () => failureMeta,
       fulfill: () => fulfillMeta,
-    });
+    }});
 
     const payload = {
       some: 'data',
